@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "packages": {
+    "@anticore/ooru-core": {
+      "signature": "b6bc7fe5f4a49601c49fd6a9933a4d7f",
+      "file": true
+    },
+    "@anticore/ooru-glsl": {
+      "signature": "bdf67d045cbebd7a01ddc1aa5d0fd728",
+      "file": true
+    }
+  }
+}
