@@ -1,8 +1,8 @@
-import testFrag from "./test.glsl";
+import glowBallsFrag from "./glowBalls.glsl";
 
 export default [
   {
-    hash: "test",
-    frag: testFrag,
+    hash: "glowBalls",
+    frag: glowBallsFrag,
   },
 ];

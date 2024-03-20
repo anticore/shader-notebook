@@ -2,11 +2,11 @@
   "version": "v1",
   "packages": {
     "@anticore/ooru-core": {
-      "signature": "b6bc7fe5f4a49601c49fd6a9933a4d7f",
+      "signature": "3aaa0139ed4d3a95eed78813a94daf54",
       "file": true
     },
     "@anticore/ooru-glsl": {
-      "signature": "bdf67d045cbebd7a01ddc1aa5d0fd728",
+      "signature": "93274b14257afefb66874d206c2a84c0",
       "file": true
     }
   }
