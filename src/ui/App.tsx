@@ -1,5 +1,5 @@
 import { useHash } from "react-use";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import shaders from "../shaders";
 import Renderer from "./Renderer";
 import Controls from "./Controls";
@@ -10,8 +10,14 @@ const hashes = shaders.map((shader) => shader.hash);
 function App() {
   const [hash, setHash] = useHash();
   const [frag, setFrag] = useState<string | null>(null);
+  const loaded = useRef(0);
 
   useEffect(() => {
+    if (loaded.current > 1) {
+      window.location.reload();
+    }
+    loaded.current++;
+
     function randomHash() {
       const randomHash = hashes[Math.floor(Math.random() * hashes.length)];
 
