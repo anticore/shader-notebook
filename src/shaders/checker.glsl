@@ -3,6 +3,7 @@
 precision highp float;
 uniform float t;
 uniform vec2 r;
+uniform float squareSize;
 
 out vec4 outColor;
 
@@ -12,6 +13,6 @@ out vec4 outColor;
 
 void main() {
     vec2 uv = fragCoordToUV(r, true);
-    float c = checker(uv + sin(t) / 10., 4. + abs(sin(t)) * 4.);
+    float c = checker(uv + sin(t) / 10., 4. - squareSize + abs(sin(t)) * 4.);
     outColor = vec4(vec3(c), 1.);
 }

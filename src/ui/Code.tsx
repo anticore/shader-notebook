@@ -1,15 +1,16 @@
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { ShaderConfig } from "../shaders";
 
 export interface CodeProps {
-  shader: string;
+  shader: ShaderConfig;
 }
 
 function Code({ shader }: CodeProps) {
   return (
     <div className="code">
       <SyntaxHighlighter language="glsl" style={dark}>
-        {shader}
+        {shader.frag}
       </SyntaxHighlighter>
     </div>
   );

@@ -12,7 +12,6 @@ out vec4 outColor;
 #include "$lib/perlin2d.glsl";
 
 vec3 background(vec2 p) {
-    
     float perlin = perlin2d(p + t * 0.2, 2, 3.);
     float perlin2 = perlin2d(p + t * 0.17, 2, 3.);
 

@@ -1,53 +1,56 @@
 import { useHash } from "react-use";
-import { useEffect, useRef, useState } from "react";
-import shaders from "../shaders";
+import { useEffect, useState } from "react";
+import shaders, { ShaderConfig } from "../shaders";
 import Renderer from "./Renderer";
 import Controls from "./Controls";
 import Code from "./Code";
 
-const hashes = shaders.map((shader) => shader.hash);
-
 function App() {
+  // current URL hash
   const [hash, setHash] = useHash();
-  const [frag, setFrag] = useState<string | null>(null);
-  const loaded = useRef(0);
+
+  // current shader configuration
+  const [shader, setShader] = useState<ShaderConfig | null>(null);
 
   useEffect(() => {
-    if (loaded.current > 1) {
+    // generates random hash from list of shader names
+    function randomHash() {
+      const shaderNames = shaders.map((shader) => shader.name);
+      const randomHash =
+        shaderNames[Math.floor(Math.random() * shaderNames.length)];
+      setHash(`#/${randomHash}`);
+
+      // force reload to clean up state
       window.location.reload();
     }
-    loaded.current++;
 
-    function randomHash() {
-      const randomHash = hashes[Math.floor(Math.random() * hashes.length)];
-
-      setHash(`#/${randomHash}`);
-    }
-
+    // if no hash, generate a random hash
     if (hash == "") {
       randomHash();
     } else {
       const currHash = hash.split("/")[1];
-      const currShader = shaders.find((shader) => shader.hash == currHash);
+      const currShader = shaders.find((shader) => shader.name == currHash);
 
+      // if shader is found with name == hash, set it as current shader
       if (currShader) {
-        setFrag(currShader.frag);
-      } else {
+        setShader(currShader);
+      }
+      // if not, randomize another shader
+      else {
         randomHash();
       }
     }
   }, [hash, setHash]);
 
-  return (
+  return shader ? (
     <>
-      {frag && (
-        <>
-          <Renderer shader={frag} />
-          <Controls />
-          <Code shader={frag} />
-        </>
-      )}
+      <Renderer shader={shader} />
+      <Controls />
+      <Code shader={shader} />
     </>
+  ) : (
+    // TODO: proper loading
+    <>Loading...</>
   );
 }
 

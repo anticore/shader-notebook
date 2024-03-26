@@ -1,49 +1,58 @@
 import { useHash } from "react-use";
 import shaders from "../shaders";
-import { useEffect, useState } from "react";
 
-const hashes = shaders.map((shader) => shader.hash);
+const shaderNames = shaders.map((shader) => shader.name);
 
 function Controls() {
   const [hash, setHash] = useHash();
-  const [currHash, setCurrHash] = useState("");
 
+  // navigate to previous shader
   function prevHash() {
-    const indexOfHash = hashes.indexOf(currHash);
+    const indexOfHash = shaderNames.indexOf(currHash);
     let newIndex = 0;
     if (indexOfHash === -1) randomHash();
-    else if (indexOfHash === 0) newIndex = hashes.length - 1;
+    else if (indexOfHash === 0) newIndex = shaderNames.length - 1;
     else newIndex = indexOfHash - 1;
 
-    setHash(`#/${hashes[newIndex]}`);
+    setHash(`#/${shaderNames[newIndex]}`);
+    // force reload to clean up state
+    window.location.reload();
   }
 
+  // navigate to next shader
   function nextHash() {
-    const indexOfHash = hashes.indexOf(currHash);
+    const indexOfHash = shaderNames.indexOf(currHash);
     let newIndex = 0;
     if (indexOfHash === -1) randomHash();
-    else if (indexOfHash === hashes.length - 1) newIndex = 0;
+    else if (indexOfHash === shaderNames.length - 1) newIndex = 0;
     else newIndex = indexOfHash + 1;
 
-    setHash(`#/${hashes[newIndex]}`);
+    setHash(`#/${shaderNames[newIndex]}`);
+    // force reload to clean up state
+    window.location.reload();
   }
 
+  // generates random hash from list of shader names
   function randomHash() {
-    const randomHash = hashes[Math.floor(Math.random() * hashes.length)];
-
+    const randomHash =
+      shaderNames[Math.floor(Math.random() * shaderNames.length)];
     setHash(`#/${randomHash}`);
+
+    // force reload to clean up state
+    window.location.reload();
   }
 
-  useEffect(() => {
-    if (hash !== "") {
-      const urlHash = hash.split("/")[1];
-      const currShader = shaders.find((shader) => shader.hash == urlHash);
+  //  set text of control label
+  let currHash = "";
 
-      if (currShader) {
-        setCurrHash(urlHash);
-      }
+  if (hash !== "") {
+    const urlHash = hash.split("/")[1];
+    const currShader = shaders.find((shader) => shader.name == urlHash);
+
+    if (currShader) {
+      currHash = urlHash;
     }
-  }, [hash, setHash, currHash]);
+  }
 
   return (
     <div className="controls">
