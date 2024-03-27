@@ -10,6 +10,7 @@ import { timer } from "@anticore/ooru-core/dist/util/timer";
 import { useEffect, useRef } from "react";
 import { ShaderConfig, createUniforms } from "../shaders";
 import { addFPS, createPane } from "./Pane";
+import { addControls } from "./Pane";
 
 export interface RendererProps {
   shader: ShaderConfig;
@@ -44,6 +45,7 @@ function Renderer({ shader }: RendererProps) {
       uniforms.current = defaultUniforms;
 
       createPane();
+      addControls();
       const fps = addFPS();
       // create uniforms from config and add them to pane
       createUniforms(uniforms.current, shader.uniforms);

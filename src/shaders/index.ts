@@ -25,9 +25,13 @@ export const createUniforms = (
 ) => {
   if (!uniforms || uniforms.length === 0) return inUniforms;
 
+  const folder = getPane()?.addFolder({
+    title: "Uniforms",
+  });
+
   uniforms.forEach((uniform) => {
     inUniforms[uniform.name] = uniform.value;
-    getPane()?.addBinding(inUniforms, uniform.name, uniform.options);
+    folder?.addBinding(inUniforms, uniform.name, uniform.options);
   });
 
   return inUniforms;

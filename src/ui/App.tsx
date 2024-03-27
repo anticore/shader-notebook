@@ -2,8 +2,8 @@ import { useHash } from "react-use";
 import { useEffect, useState } from "react";
 import shaders, { ShaderConfig } from "../shaders";
 import Renderer from "./Renderer";
-import Controls from "./Controls";
-import Code from "./Code";
+//import Controls from "./Controls";
+//import Code from "./Code";
 
 function App() {
   // current URL hash
@@ -15,10 +15,12 @@ function App() {
   useEffect(() => {
     // generates random hash from list of shader names
     function randomHash() {
+      const currHash = hash.split("/")[1];
       const shaderNames = shaders.map((shader) => shader.name);
-      const randomHash =
+      const newHash =
         shaderNames[Math.floor(Math.random() * shaderNames.length)];
-      setHash(`#/${randomHash}`);
+      if (currHash == newHash) return randomHash();
+      setHash(`#/${newHash}`);
 
       // force reload to clean up state
       window.location.reload();
@@ -45,8 +47,8 @@ function App() {
   return shader ? (
     <>
       <Renderer shader={shader} />
-      <Controls />
-      <Code shader={shader} />
+      {/* <Controls /> */}
+      {/* <Code shader={shader} /> */}
     </>
   ) : (
     // TODO: proper loading
