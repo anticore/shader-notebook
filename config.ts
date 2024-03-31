@@ -9,7 +9,7 @@ import spike01Frag from "./shaders/spike_01/spike_01.glsl";
 import spike01Sheet from "./shaders/spike_01/spike_01.dope?raw";
 
 const shaderIndex: ShaderConfig[] = [
-  {
+  /*{
     name: "glowBalls",
     frag: glowBallsFrag,
   },
@@ -33,7 +33,7 @@ const shaderIndex: ShaderConfig[] = [
     frag: dopesheetFrag,
     sheet: dopesheetSheet,
     sheetMonitors: true,
-  },
+  },*/
   {
     name: "spike_01",
     frag: spike01Frag,

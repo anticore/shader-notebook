@@ -89,7 +89,7 @@ function Renderer({ shader }: RendererProps) {
 
         // update uniforms
         if (uniforms.current) {
-          uniforms.current.t = time % 8;
+          uniforms.current.t = time;
 
           if (canvasRef.current) {
             uniforms.current.r = [
