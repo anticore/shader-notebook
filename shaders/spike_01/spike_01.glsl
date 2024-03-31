@@ -15,13 +15,15 @@ out vec4 outColor;
 const float far = 80.;
 
 vec3 bg(vec2 uv) {
-    return hsl2rgb(vec3(dA2 * uv.x + t * .1, 0.5, 0.5));
+    return vec3(.1);
 }
 
 vec2 map(vec3 p) {
     p.z += 5.;
+
     p.xz *= rotM(t);
     p.yx *= rotM(t);
+    
     vec2 sphere = vec2(fSphere(p, 1.), 0.);
     vec2 box = vec2(fBox(p, vec3(1.)), 1.);
     vec2 torus = vec2(fTorus(p, .3, 1.), 2.);
@@ -72,7 +74,8 @@ void main() {
         }
 
         float diffuse = max(0.,dot(hn,ld));
-        float fresnel=min(1.,pow(1.+dot(hn,rd),4.)); //Fresnel = background reflections on edges of geometry
+        //float fresnel=min(1.,pow(1.+dot(hn,rd),4.)); //Fresnel = background reflections on edges of geometry
+        float fresnel = 0.;
         float specular=pow(max(dot(reflect(-ld,hn),-rd),0.),10.);//Specular = Bright highlights; 30 = specular power
         float ao=clamp(map(hp+hn*.1).x/.1,0.,1.);          //Ambient occlusion
         float sss=smoothstep(0.,1.,map(hp+ld*.1).x/.1);

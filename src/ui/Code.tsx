@@ -8,7 +8,7 @@ export interface CodeProps {
 
 function Code({ shader }: CodeProps) {
   return (
-    <div className="code-wrapper">
+    <div className="code-wrapper" hidden={shader.hideCode}>
       <div className="code-box">
         <div className="code-tab">
           <span className="code-label">Code</span>

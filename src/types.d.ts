@@ -16,4 +16,8 @@ export interface ShaderConfig {
   sheetMonitors?: boolean;
 
   uniforms?: UniformConfig[];
+  timeUniform?: boolean;
+  sizeUniforms?: boolean;
+
+  hideCode?: boolean;
 }

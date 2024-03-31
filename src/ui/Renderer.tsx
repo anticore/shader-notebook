@@ -54,6 +54,11 @@ function Renderer({ shader }: RendererProps) {
 
       addMonitors(uniforms.current, [["t", { interval: 10 }]]);
 
+      if (shader.sizeUniforms) {
+        addMonitors(canvas as any, [["width", { interval: 10 }]]);
+        addMonitors(canvas as any, [["height", { interval: 10 }]]);
+      }
+
       // load dopesheet
       let sheet: ParsedSheet | null = null;
       if (shader.sheet) {
@@ -85,6 +90,13 @@ function Renderer({ shader }: RendererProps) {
         // update uniforms
         if (uniforms.current) {
           uniforms.current.t = time % 8;
+
+          if (canvasRef.current) {
+            uniforms.current.r = [
+              canvasRef.current.width,
+              canvasRef.current.height,
+            ];
+          }
 
           if (sheet) {
             const sheetValues = sheet.get(uniforms.current.t);
