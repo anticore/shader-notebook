@@ -1,6 +1,7 @@
-import { Pane } from "tweakpane";
+import { BaseBladeParams, Pane } from "tweakpane";
 import * as EssentialsPlugin from "@tweakpane/plugin-essentials";
-import shaders from "../shaders";
+import shaders from "../../config";
+import { UniformConfig } from "../types";
 
 let pane: Pane | undefined;
 
@@ -84,10 +85,61 @@ export const addControls = () => {
     // eslint-disable-next-line
     .on("click", (ev: any) => {
       const x = ev.index[0];
-      console.log("click", x);
       const methods = [prevHash, randomHash, nextHash];
       methods[x] && methods[x]();
     });
+
+  const currHash = window.location.hash.split("/")[1];
+  (
+    pane.addBlade({
+      view: "list",
+      label: "Shader",
+      options: shaders.map((shader) => ({
+        text: shader.name,
+        value: shader.name,
+      })),
+      value: currHash,
+      // eslint-disable-next-line
+    }) as any
+  )
+    // eslint-disable-next-line
+    .on("change", (ev: any) => {
+      window.location.hash = `#/${ev["value"]}`;
+      // force reload to clean up state
+      window.location.reload();
+    });
+};
+
+export const addMonitors = (
+  inUniforms: {
+    [key: string]: number | string | number[];
+  },
+  monitor: ([string] | [string, BaseBladeParams])[]
+) => {
+  if (!pane) return;
+  // eslint-disable-next-line
+  monitor.forEach(([value, opts]) =>
+    pane?.addBinding(inUniforms, value, { readonly: true, ...opts })
+  );
+  return inUniforms;
+};
+
+export const createUniforms = (
+  inUniforms: { [key: string]: number | string | number[] },
+  uniforms?: UniformConfig[]
+) => {
+  if (!uniforms || uniforms.length === 0) return inUniforms;
+
+  const folder = getPane()?.addFolder({
+    title: "Uniforms",
+  });
+
+  uniforms.forEach((uniform) => {
+    inUniforms[uniform.name] = uniform.value;
+    folder?.addBinding(inUniforms, uniform.name, uniform.options);
+  });
+
+  return inUniforms;
 };
 
 export default pane;

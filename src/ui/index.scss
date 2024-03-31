@@ -28,56 +28,48 @@ body {
   overflow: hidden;
 }
 
-.controls {
-  position: absolute;
-  margin: 1rem 3rem;
-  display: flex;
-  flex-direction: row;
-  background: rgba(black, 0.5);
-  padding: 0.3rem 0.5rem;
-  border-radius: 0.3rem;
-  border: 1px solid gray;
-  opacity: 0.5;
-  transition: opacity 0.1s ease-in-out;
-  &:hover {
-    opacity: 1;
-  }
-
-  &__button {
-    cursor: pointer;
-    background: rgba(black, 0.5);
-    padding: 0.3rem;
-    border-radius: 0.3rem;
-    border: 1px solid gray;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0.1rem;
-    line-height: 0.5rem;
-  }
-
-  &__text {
-    background: rgba(black, 0.5);
-    padding: 0.3rem 1rem;
-    border-radius: 0.3rem;
-    border: 1px solid gray;
-    color: white;
-    font-family: monospace;
-    line-height: "" 0.5rem;
-    margin: 0.1rem;
-  }
-}
-
-.code {
+.code-wrapper {
   position: absolute;
   bottom: 0;
   right: 0;
-  max-height: 300px;
+  max-height: 500px;
   overflow-y: scroll;
-  opacity: 0;
-  transition: opacity 0.1s ease-in-out;
+  opacity: 0.5;
+  transition: opacity 0.3s ease-in-out;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-radius: 0.3rem;
+
+  .code-box {
+    padding: 1rem 2rem 0 0;
+    position: relative;
+    padding-left: 25px;
+    border-radius: 0.3rem;
+    display: flex;
+    right: calc(-100% + 25px);
+    transition: 0.3s ease-in-out;
+    background: var(--tp-base-background-color);
+    color: var(--tp-container-foreground-color);
+
+    .code-label {
+      font-family: "Courier New", Courier, monospace;
+      transform: translateX(calc(-100% - 0.3rem));
+      font-size: 0.8rem;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    .code-tab {
+      position: fixed;
+      width: 25px;
+    }
+  }
 
   &:hover {
+    overflow-y: visible;
     opacity: 1;
+    .code-box {
+      right: 0;
+    }
   }
 }

@@ -12,10 +12,9 @@
   },
   "dependencies": {
     "@anticore/ooru-core": "file:.yalc/@anticore/ooru-core",
+    "@anticore/ooru-dopesheet": "file:.yalc/@anticore/ooru-dopesheet",
     "@anticore/ooru-glsl": "file:.yalc/@anticore/ooru-glsl",
-    "@tweakpane/core": "^2.0.3",
     "@tweakpane/plugin-essentials": "^0.2.1",
-    "@types/react-syntax-highlighter": "^15.5.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-syntax-highlighter": "^15.5.0",
@@ -23,9 +22,11 @@
     "tweakpane": "^4.0.3"
   },
   "devDependencies": {
+    "@tweakpane/core": "^2.0.3",
     "@types/gh-pages": "^6.1.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-syntax-highlighter": "^15.5.11",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react-swc": "^3.5.0",

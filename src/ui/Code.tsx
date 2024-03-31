@@ -1,6 +1,6 @@
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { ShaderConfig } from "../shaders";
+import { atelierCaveDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { type ShaderConfig } from "../types";
 
 export interface CodeProps {
   shader: ShaderConfig;
@@ -8,10 +8,15 @@ export interface CodeProps {
 
 function Code({ shader }: CodeProps) {
   return (
-    <div className="code">
-      <SyntaxHighlighter language="glsl" style={dark}>
-        {shader.frag}
-      </SyntaxHighlighter>
+    <div className="code-wrapper">
+      <div className="code-box">
+        <div className="code-tab">
+          <span className="code-label">Code</span>
+        </div>
+        <SyntaxHighlighter language="glsl" style={atelierCaveDark}>
+          {shader.frag}
+        </SyntaxHighlighter>
+      </div>
     </div>
   );
 }

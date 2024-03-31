@@ -11,6 +11,10 @@ const fullReloadAlways = {
 };
 
 export default defineConfig({
-  plugins: [react(), glsl({ dir: __dirname }), fullReloadAlways],
+  plugins: [
+    react(),
+    glsl({ dir: __dirname /*, validate: true*/ }),
+    fullReloadAlways,
+  ],
   base: "https://anticore.github.io/shader-notebook/",
 });

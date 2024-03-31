@@ -1,9 +1,9 @@
 import { useHash } from "react-use";
 import { useEffect, useState } from "react";
-import shaders, { ShaderConfig } from "../shaders";
+import shaders from "../../config";
 import Renderer from "./Renderer";
-//import Controls from "./Controls";
-//import Code from "./Code";
+import Code from "./Code";
+import { type ShaderConfig } from "../types";
 
 function App() {
   // current URL hash
@@ -47,8 +47,7 @@ function App() {
   return shader ? (
     <>
       <Renderer shader={shader} />
-      {/* <Controls /> */}
-      {/* <Code shader={shader} /> */}
+      <Code shader={shader} />
     </>
   ) : (
     // TODO: proper loading
