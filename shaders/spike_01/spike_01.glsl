@@ -13,19 +13,22 @@ out vec4 outColor;
 #include "$lib/mo.glsl";
 #include "$lib/smin.glsl";
 #include "$lib/rotM.glsl";
+#include "$lib/b_hash.glsl";
+#include "$lib/acesTonemap.glsl";
+#include "$lib/skyGradient.glsl";
+#include "$lib/gamma.glsl";
+#include "$lib/waves.glsl";
 
 const float far = 30.;
 
-vec3 bg(vec2 uv) {
-    return vec3(0.05, 0.04, .1);
+vec3 bg(vec3 rd) {
+    return skyGradient(rd, vec3(0.5, -.1, 0.1), vec3(.5, 0.5, 0.6));
 }
 
 float bgBoxes(vec3 p) {
-
     p.z += 10.;
-
-    p.xz *= rotM(p.y * 0.06);
     p.yx *= rotM(0.5);
+    p.xz *= rotM( .100);
 
     vec3 cp = p;
 
@@ -50,15 +53,25 @@ float bgBoxes(vec3 p) {
 }
 
 float waterPlane(vec3 p) {
-    return  fPlane(p, vec3(0., 1., 0.), 2.);
+    float waves = getwaves(p.xz * 2., 5, t * 3.);
+    return  fPlane(p, vec3(0., 1., 0.), 1.5) - waves * 0.1;
+}
+
+float datastream(vec3 p) {
+    p.z += 10.;
+
+    p.yx *= rotM(0.5);
+    return fBox(p, vec3(.1, 1000., .1));
 }
 
 vec2 map(vec3 p) {
     vec2 metalBoxes = vec2(bgBoxes(p), 1.);
     vec2 water = vec2(waterPlane(p), 2.);
+    vec2 stream = vec2(datastream(p), 3.);
 
     vec2 scene = metalBoxes;
     if (water.x < scene.x) scene = water;
+    if (stream.x < scene.x) scene = stream;
 
     return scene;
 }
@@ -73,7 +86,7 @@ vec3 tr(vec3 ro, vec3 rd, vec2 uv){
     int bnc = 0; float en = 1.;
     float ttd = td;
 
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < 200; i++) {
         hp = ro + rd * td;
         h = map(hp);
 
@@ -82,7 +95,7 @@ vec3 tr(vec3 ro, vec3 rd, vec2 uv){
 
         if (h.x > far 
             || td > far) {
-                c += vec4(bg(uv), 1.);
+                c += vec4(bg(rd), 1.);
                 break;
             };
 
@@ -90,33 +103,43 @@ vec3 tr(vec3 ro, vec3 rd, vec2 uv){
         hn = f_norm(hp);
         
 
-        if (h.x < 0.001) {
+        if (h.x < 0.005) {
             if (h.y == 1.) {
-                vec3 cc = vec3(.3);
+                hn += b_hash(uv) * 0.05;
+                vec3 cc = skyGradient(hn, vec3(.3), vec3(1.)) * vec3(0.3);
+                //vec3 cc = vec3(.3);
                 vec3 ld = normalize(vec3(-.1,.4,.3));
                 
                 float diffuse = max(0.,dot(hn,ld));
-                float fresnel=min(1.,pow(1.+dot(hn,rd),4.)); //Fresnel = background reflections on edges of geometry
+                float fresnel=min(1.,pow(1.+dot(hn,rd),5.)); //Fresnel = background reflections on edges of geometry
                 float specular=pow(max(dot(reflect(-ld,hn),-rd),0.),10.);//Specular = Bright highlights; 30 = specular power
                 float ao=clamp(map(hp+hn*.3).x/.3,0.,1.);          //Ambient occlusion
                     
 
-                cc = mix(specular+cc *(ao+.1)*(diffuse),bg(uv),fresnel);
-                 cc = mix(bg(uv),cc,exp(-.001*ttd*ttd*ttd)); 
+                cc = mix(specular+cc *(ao+.1)*(diffuse),bg(rd),fresnel * .1);
+                //cc = mix(bg(rd),cc,exp(-.00005*td*td*td)); 
 
-                c += vec4(cc, 1.) * en;
-                break;
-            }
-            else if (h.y == 2.) {
-                float ao=clamp(map(hp+hn*.3).x/.3,0.,1.);   
-                vec3 cc = vec3(bg(uv)) * ao;
-                cc = mix(bg(uv),cc,exp(-.001*ttd*ttd*ttd)); 
-                c += vec4(cc, .15) * ao * en;
+
+                c += vec4(cc, .99) * en;
                 ro = hp;
                 rd = reflect(rd, hn);
-                td = .4;
+                td = .1;
                 bnc += 1;
-                en = max(en - .5, 0.);
+                en = max(en - .0, 0.);
+            }
+            else if (h.y == 2.) { 
+                vec3 cc = vec3(bg(reflect(rd, hn))) ;
+                cc = mix(bg(reflect(rd, hn)),cc,exp(-.001*ttd*ttd*ttd)); 
+                c += vec4(cc, .1) * en;
+                ro = hp;
+                rd = reflect(rd, hn);
+                td = .01;
+                bnc += 1;
+                en = max(en - .1, 0.);
+            }
+            else if (h.y == 3.) {
+                c = vec4(hsl2rgb(vec3(sin(-t * 2. + h.x * 10. + hp.y / 10.), 1., .5)), 1.);
+                break;
             }
         }
 
@@ -130,19 +153,19 @@ vec3 tr(vec3 ro, vec3 rd, vec2 uv){
     }
 
     if (td > far || h.x > far) 
-                c += vec4(bg(uv), 1.);
+                c += vec4(bg(rd), 1.);
 
     vec3 cc = c.rgb;
-    return cc;
+    return clamp(cc, 0., 1.);
 }
 
 void main() {
     vec2 uv = fragCoordToUV(r, true);
 
-    vec3 ro = vec3(0., 0., 1.);
+    vec3 ro = vec3(0, 0., 0.2 + t / 15.);
     vec3 rd = normalize(vec3(uv, 0.) - ro);
 
     vec3 c = tr(ro, rd, uv);
 
-    outColor = vec4(c, 1.);
+    outColor = vec4(/*gamma*/(aces_tonemap(c)), 1.);
 }
