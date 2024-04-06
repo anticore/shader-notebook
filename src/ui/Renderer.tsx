@@ -55,7 +55,9 @@ function Renderer({ shader }: RendererProps) {
       addMonitors(uniforms.current, [["t", { interval: 10 }]]);
 
       if (shader.sizeUniforms) {
+        // eslint-disable-next-line
         addMonitors(canvas as any, [["width", { interval: 10 }]]);
+        // eslint-disable-next-line
         addMonitors(canvas as any, [["height", { interval: 10 }]]);
       }
 
