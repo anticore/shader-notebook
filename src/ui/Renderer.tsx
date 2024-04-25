@@ -1,18 +1,16 @@
-import {
-  createCanvas,
-  createProgram,
-  resizeCanvas,
-  initGL,
-} from "@anticore/ooru-core";
-import vert from "@anticore/ooru-glsl/dist/glsl/defaultVert.glsl";
-import { renderToScreen } from "@anticore/ooru-core/dist/gl/renderToScreen";
-import { timer } from "@anticore/ooru-core/dist/util/timer";
+import { createCanvas } from "@anticore/boavista/dist/page/createCanvas";
+import { createProgram } from "@anticore/boavista/dist/gl/createProgram";
+import { resizeCanvas } from "@anticore/boavista/dist/page/resizeCanvas";
+import { initGL } from "@anticore/boavista/dist/gl/initGL";
+import { vert } from "@anticore/boavista/dist/gl/vert";
+import { renderToScreen } from "@anticore/boavista/dist/gl/renderToScreen";
+import { timer } from "@anticore/boavista/dist/util/timer";
 import { useEffect, useRef } from "react";
 import { addFPS, addMonitors, createPane, createUniforms } from "./Pane";
 import { addControls } from "./Pane";
 import { type ShaderConfig } from "../types";
-import { dopesheet } from "@anticore/ooru-dopesheet";
-import { type ParsedSheet } from "@anticore/ooru-dopesheet/dist/dopesheet";
+import { dopesheet } from "@anticore/dopesheet";
+import { type ParsedSheet } from "@anticore/dopesheet/dist/dopesheet";
 
 export interface RendererProps {
   shader: ShaderConfig;

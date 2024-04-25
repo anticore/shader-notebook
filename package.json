@@ -11,9 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@anticore/ooru-core": "file:.yalc/@anticore/ooru-core",
-    "@anticore/ooru-dopesheet": "file:.yalc/@anticore/ooru-dopesheet",
-    "@anticore/ooru-glsl": "file:.yalc/@anticore/ooru-glsl",
+    "@anticore/basqueiro": "^0.8.0",
+    "@anticore/boavista": "^0.8.0",
+    "@anticore/dopesheet": "^0.8.1",
     "@tweakpane/plugin-essentials": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import { glsl } from "@anticore/ooru-glsl/dist/glsl.js";
+import { glsl } from "@anticore/boavista/dist/plugin/glsl";
 import react from "@vitejs/plugin-react-swc";
 
 const fullReloadAlways = {
