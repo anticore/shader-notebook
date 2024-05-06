@@ -1,3 +1,4 @@
+import { ChainOptions, ShaderOptions } from "@anticore/boavista/dist/gl/chain";
 import { BindingParams } from "tweakpane";
 
 export interface UniformConfig {
@@ -6,18 +7,10 @@ export interface UniformConfig {
   options?: BindingParams;
 }
 
-export interface ShaderConfig {
+export interface NotebookShaderConfig {
   name: string;
-  // TODO: add other info args like title, date,...
-
-  frag: string;
-
-  sheet?: string;
-  sheetMonitors?: boolean;
-
+  shaders: ShaderOptions[];
   uniforms?: UniformConfig[];
-  timeUniform?: boolean;
-  sizeUniforms?: boolean;
-
-  hideCode?: boolean;
 }
+
+export type NotebookConfig = NotebookShaderConfig[];

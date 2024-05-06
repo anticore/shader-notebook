@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import shaders from "../../config";
 import Renderer from "./Renderer";
 import Code from "./Code";
-import { type ShaderConfig } from "../types";
 
 function App() {
   // current URL hash
   const [hash, setHash] = useHash();
 
   // current shader configuration
-  const [shader, setShader] = useState<ShaderConfig | null>(null);
+  const [shader, setShader] = useState<any>(null);
 
   useEffect(() => {
     // generates random hash from list of shader names
@@ -46,7 +45,7 @@ function App() {
 
   return shader ? (
     <>
-      <Renderer shader={shader} />
+      <Renderer shaders={shader.shaders} />
       <Code shader={shader} />
     </>
   ) : (

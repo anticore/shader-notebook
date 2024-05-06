@@ -8,15 +8,16 @@ import { timer } from "@anticore/boavista/dist/util/timer";
 import { useEffect, useRef } from "react";
 import { addFPS, addMonitors, createPane, createUniforms } from "./Pane";
 import { addControls } from "./Pane";
-import { type ShaderConfig } from "../types";
 import { dopesheet } from "@anticore/dopesheet";
 import { type ParsedSheet } from "@anticore/dopesheet/dist/dopesheet";
+import { chain, type ShaderOptions } from "@anticore/boavista/dist/gl/chain";
 
 export interface RendererProps {
-  shader: ShaderConfig;
+  shaders: ShaderOptions[];
+  sheet?: string;
 }
 
-function Renderer({ shader }: RendererProps) {
+function Renderer({ shaders, sheet }: RendererProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const loaded = useRef<boolean>(false);
   const uniforms = useRef<{ [key: string]: number | string | number[] } | null>(
@@ -26,6 +27,9 @@ function Renderer({ shader }: RendererProps) {
   useEffect(() => {
     if (loaded.current) return;
 
+    console.log(shaders);
+
+    if (!shaders) return;
     if (canvasRef.current) {
       const canvas = createCanvas(canvasRef.current);
 
@@ -35,7 +39,7 @@ function Renderer({ shader }: RendererProps) {
       });
 
       const gl = initGL({ canvas });
-      const program = createProgram({ gl, vert, frag: shader.frag })!;
+      const c = chain({ gl, shaders })!;
 
       const defaultUniforms = {
         t: 0,
@@ -48,22 +52,24 @@ function Renderer({ shader }: RendererProps) {
       addControls();
       const fps = addFPS();
       // create uniforms from config and add them to pane
-      createUniforms(uniforms.current, shader.uniforms);
+      // FIXME: createUniforms(uniforms.current, shaders);
 
       addMonitors(uniforms.current, [["t", { interval: 10 }]]);
 
-      if (shader.sizeUniforms) {
+      /*if (shader.sizeUniforms) {
         // eslint-disable-next-line
         addMonitors(canvas as any, [["width", { interval: 10 }]]);
         // eslint-disable-next-line
         addMonitors(canvas as any, [["height", { interval: 10 }]]);
       }
+      */
 
       // load dopesheet
-      let sheet: ParsedSheet | null = null;
-      if (shader.sheet) {
-        sheet = dopesheet(shader.sheet);
+      let pSheet: ParsedSheet | null = null;
+      if (sheet) {
+        pSheet = dopesheet(sheet);
 
+        /*
         if (shader.sheetMonitors) {
           const sheetValues = sheet.get(0);
           uniforms.current.dA1 = sheetValues.analog[0];
@@ -82,6 +88,7 @@ function Renderer({ shader }: RendererProps) {
             ["dA4", { view: "graph", min: 0, max: 5 }],
           ]);
         }
+        */
       }
 
       const loop = timer((time: number) => {
@@ -98,8 +105,8 @@ function Renderer({ shader }: RendererProps) {
             ];
           }
 
-          if (sheet) {
-            const sheetValues = sheet.get(uniforms.current.t);
+          if (pSheet) {
+            const sheetValues = pSheet.get(uniforms.current.t);
 
             uniforms.current.dA1 = sheetValues.analog[0];
             uniforms.current.dA2 = sheetValues.analog[1];
@@ -112,9 +119,10 @@ function Renderer({ shader }: RendererProps) {
           }
         }
 
-        renderToScreen({
+        console.log("123");
+
+        c({
           gl,
-          program,
           uniforms: uniforms.current || defaultUniforms,
         });
 
@@ -123,7 +131,7 @@ function Renderer({ shader }: RendererProps) {
       loop.start();
       loaded.current = true;
     }
-  }, [shader]);
+  }, [shaders]);
 
   return <canvas ref={canvasRef} />;
 }
